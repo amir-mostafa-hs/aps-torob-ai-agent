@@ -1,1 +1,25 @@
 /docs/datasets/
+/node_modules
+/torob-dataset
+/sample-front-for-project
+
+# Node & Next.js
+frontend/.next/
+frontend/node_modules/
+frontend/out/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+backend/.venv/
+.venv/
+venv/
+*.sqlite-journal
+session.sqlite
+backend/session.sqlite
+
+# Environment & secrets
+.env
+.env*.local
+*.env
