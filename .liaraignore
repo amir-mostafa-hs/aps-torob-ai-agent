@@ -1,0 +1,24 @@
+# Frontend applications (deployed separately)
+frontend/
+sample-front-for-project/
+
+# Source and intermediate CSV files (only SQLite DB and JSONs are used)
+torob-dataset/processed_data/*.csv
+torob-dataset/raw_data/
+*.csv
+
+# Local sessions and cache
+backend/session_store.sqlite
+backend/.pytest_cache/
+.pytest_cache/
+__pycache__/
+*.pyc
+
+# Development documentation and configs
+.git/
+.agents/
+.claude/
+docs/
+*.md
+.env*
+.gitignore

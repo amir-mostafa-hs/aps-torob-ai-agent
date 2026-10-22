@@ -16,8 +16,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy backend source code
 COPY backend/ /app/backend/
 
-# Copy processed datasets
-COPY torob-dataset/processed_data/ /app/torob-dataset/processed_data/
+# Copy processed datasets (SQLite DB and JSON lookups)
+COPY torob-dataset/processed_data/torob_agent.sqlite /app/torob-dataset/processed_data/
+COPY torob-dataset/processed_data/tehran_malls_directory.json /app/torob-dataset/processed_data/
+COPY torob-dataset/processed_data/tehran_bazaar_hubs_by_category.json /app/torob-dataset/processed_data/
+COPY torob-dataset/processed_data/product_reviews_and_buying_guides.json /app/torob-dataset/processed_data/
 
 ENV PYTHONPATH=/app/backend
 ENV PORT=8000

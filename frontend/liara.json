@@ -1,0 +1,5 @@
+{
+  "app": "torob-assistant-web",
+  "platform": "next",
+  "port": 3000
+}
