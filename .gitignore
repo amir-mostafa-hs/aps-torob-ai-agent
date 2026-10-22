@@ -18,6 +18,9 @@ venv/
 *.sqlite-journal
 session.sqlite
 backend/session.sqlite
+session_store.sqlite
+backend/session_store.sqlite
+*.sqlite
 
 # Environment & secrets
 .env
