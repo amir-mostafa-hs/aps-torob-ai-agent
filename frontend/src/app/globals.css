@@ -3,40 +3,43 @@
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *, .dark, .dark *));
 
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
+  --background: #f8f7f4;
+  --foreground: #1c1d20;
   --card-bg: #ffffff;
-  --card-border: #e2e8f0;
+  --card-border: #e8e6df;
   --torob-red: #d9383a;
   --torob-red-hover: #c42b2d;
   --torob-red-light: #fef2f2;
-  --muted: #64748b;
+  --muted: #71717a;
+  --muted-light: #f4f3ef;
   --accent-green: #10b981;
   --accent-amber: #f59e0b;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0c1017;
-    --foreground: #f0f6fc;
-    --card-bg: #151b24;
-    --card-border: #232d3d;
-    --torob-red: #e05a5a;
-    --torob-red-hover: #ea6b6b;
-    --torob-red-light: #221417;
-    --muted: #8b949e;
+    --background: #0f141c;
+    --foreground: #f1f5f9;
+    --card-bg: #18202c;
+    --card-border: #263346;
+    --torob-red: #e0484a;
+    --torob-red-hover: #ea5b5d;
+    --torob-red-light: #2b181b;
+    --muted: #94a3b8;
+    --muted-light: #1e293b;
   }
 }
 
 .dark {
-  --background: #0c1017;
-  --foreground: #f0f6fc;
-  --card-bg: #151b24;
-  --card-border: #232d3d;
-  --torob-red: #e05a5a;
-  --torob-red-hover: #ea6b6b;
-  --torob-red-light: #221417;
-  --muted: #8b949e;
+  --background: #0f141c;
+  --foreground: #f1f5f9;
+  --card-bg: #18202c;
+  --card-border: #263346;
+  --torob-red: #e0484a;
+  --torob-red-hover: #ea5b5d;
+  --torob-red-light: #2b181b;
+  --muted: #94a3b8;
+  --muted-light: #1e293b;
 }
 
 html {
@@ -49,6 +52,33 @@ body {
   background-color: var(--background);
   color: var(--foreground);
   min-height: 100vh;
+}
+
+/* Custom slim scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(140, 140, 140, 0.22);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(140, 140, 140, 0.4);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 /* Accessible focus outline */

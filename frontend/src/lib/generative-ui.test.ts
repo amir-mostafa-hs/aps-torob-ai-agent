@@ -12,6 +12,7 @@ describe('Generative UI Allowlist and Validation', () => {
     assert.deepEqual(ALLOWED_UI_BLOCK_TYPES, [
       'ProductCardList',
       'ShopCardList',
+      'InteractiveMapCard',
       'MallNavigationCard',
       'BazaarHubCard',
       'InquirySimulationCard',
@@ -137,5 +138,21 @@ describe('Generative UI Allowlist and Validation', () => {
     assert.ok(result);
     assert.equal(result.valid, true);
     assert.equal(result.type, 'InquirySimulationCard');
+  });
+
+  it('should validate InteractiveMapCard with valid coordinates', () => {
+    const validBlock = {
+      type: 'InteractiveMapCard',
+      data: {
+        lat: 35.7575,
+        lon: 51.4099,
+        title: 'فروشگاه پایتخت',
+        address: 'خیابان میرداماد، مجتمع کامپیوتر پایتخت'
+      }
+    };
+    const result = validateUIBlock(validBlock);
+    assert.ok(result);
+    assert.equal(result.valid, true);
+    assert.equal(result.type, 'InteractiveMapCard');
   });
 });

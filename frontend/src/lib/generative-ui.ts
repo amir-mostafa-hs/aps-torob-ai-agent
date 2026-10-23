@@ -7,6 +7,7 @@
 export const ALLOWED_UI_BLOCK_TYPES = [
   'ProductCardList',
   'ShopCardList',
+  'InteractiveMapCard',
   'MallNavigationCard',
   'BazaarHubCard',
   'InquirySimulationCard',
@@ -106,6 +107,21 @@ export function validateUIBlock(raw: unknown): ValidatedUIBlock | null {
             (o) => o && typeof o === 'object' && o.offer_id && o.shop_name
           ),
         },
+      };
+    }
+
+    case 'InteractiveMapCard': {
+      if (typeof dataObj.lat !== 'number' || typeof dataObj.lon !== 'number') {
+        return {
+          valid: false,
+          type,
+          error: 'مختصات جغرافیایی نقشه نامعتبر است.',
+        };
+      }
+      return {
+        valid: true,
+        type,
+        data: dataObj,
       };
     }
 

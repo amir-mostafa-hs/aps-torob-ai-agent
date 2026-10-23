@@ -9,40 +9,44 @@ import { COPY_FA } from '@/copy/fa';
 interface MallNavigationModalProps {
   isOpen: boolean;
   onClose: () => void;
-  offer: StoreOfferItem | null;
+  offer?: StoreOfferItem | null;
+  mallName?: string | null;
 }
 
 export function MallNavigationModal({
   isOpen,
   onClose,
   offer,
+  mallName,
 }: MallNavigationModalProps) {
   const [mallInfo, setMallInfo] = useState<MallInfo | null>(null);
   const [loading, setLoading] = useState(false);
 
+  const effectiveMallName = mallName || offer?.navigation.mall_name_clean;
+
   useEffect(() => {
-    if (isOpen && offer?.navigation.mall_name_clean) {
+    if (isOpen && effectiveMallName) {
       setLoading(true);
-      getMall(offer.navigation.mall_name_clean)
+      getMall(effectiveMallName)
         .then(setMallInfo)
         .catch(() => setMallInfo(null))
         .finally(() => setLoading(false));
     } else {
       setMallInfo(null);
     }
-  }, [isOpen, offer]);
+  }, [isOpen, effectiveMallName]);
 
-  if (!isOpen || !offer) return null;
+  if (!isOpen || (!offer && !mallName)) return null;
 
-  const nav = offer.navigation;
+  const nav = offer?.navigation;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-      <div className="bg-white dark:bg-[#151b24] rounded-2xl max-lg w-full p-6 shadow-2xl border border-slate-200 dark:border-[#232d3d] space-y-5 max-h-[90vh] overflow-y-auto">
+      <div className="bg-white dark:bg-[#18202c] rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 dark:border-[#263346] space-y-5 max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-100 dark:border-[#232d3d] pb-3">
           <div className="flex items-center gap-2">
-            <div className="p-2 rounded-xl bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/20">
+            <div className="p-2 rounded-xl bg-rose-500/15 text-[#d9383a] dark:text-[#e0484a]">
               <Compass className="w-5 h-5" />
             </div>
             <div>
@@ -50,45 +54,48 @@ export function MallNavigationModal({
                 {COPY_FA.mallLocator.title}
               </h3>
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                {offer.shop_name} • {nav.mall_name_clean || 'پاساژ'}
+                {offer ? `${offer.shop_name} • ` : ''}
+                {effectiveMallName || 'پاساژ'}
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
+            className="p-1 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* In-Mall Exact Location Card */}
-        <div className="bg-rose-50/50 dark:bg-[#1a2230]/60 p-4 rounded-2xl border border-rose-200/60 dark:border-[#2a3547] space-y-3">
-          <span className="text-xs font-bold text-rose-700 dark:text-rose-300 block">
-            موقعیت دقیق غرفه در پاساژ:
-          </span>
-          <div className="grid grid-cols-2 gap-3 text-xs">
-            <div className="bg-white dark:bg-[#151b24] p-2.5 rounded-xl border border-slate-200 dark:border-[#232d3d]">
-              <span className="text-slate-400 block text-[10px]">طبقه:</span>
-              <span className="font-bold text-slate-900 dark:text-[#f0f6fc] text-sm">
-                {nav.floor_clean || 'همکف'}
-              </span>
+        {/* In-Mall Exact Location Card (if specific store offer is provided) */}
+        {nav && (
+          <div className="bg-rose-50/50 dark:bg-[#1a2230]/60 p-4 rounded-2xl border border-rose-200/60 dark:border-[#2a3547] space-y-3">
+            <span className="text-xs font-bold text-[#d9383a] dark:text-[#e0484a] block">
+              موقعیت دقیق غرفه در پاساژ:
+            </span>
+            <div className="grid grid-cols-2 gap-3 text-xs">
+              <div className="bg-white dark:bg-[#151b24] p-2.5 rounded-xl border border-slate-200 dark:border-[#232d3d]">
+                <span className="text-slate-400 block text-[10px]">طبقه:</span>
+                <span className="font-bold text-slate-900 dark:text-[#f0f6fc] text-sm">
+                  {nav.floor_clean || 'همکف'}
+                </span>
+              </div>
+              <div className="bg-white dark:bg-[#151b24] p-2.5 rounded-xl border border-slate-200 dark:border-[#232d3d]">
+                <span className="text-slate-400 block text-[10px]">واحد / پلاک:</span>
+                <span className="font-bold text-slate-900 dark:text-[#f0f6fc] text-sm">
+                  {nav.unit_clean || 'نامشخص'}
+                </span>
+              </div>
             </div>
-            <div className="bg-white dark:bg-[#151b24] p-2.5 rounded-xl border border-slate-200 dark:border-[#232d3d]">
-              <span className="text-slate-400 block text-[10px]">واحد / پلاک:</span>
-              <span className="font-bold text-slate-900 dark:text-[#f0f6fc] text-sm">
-                {nav.unit_clean || 'نامشخص'}
-              </span>
-            </div>
-          </div>
 
-          {nav.indoor_navigation_hint && (
-            <div className="bg-white dark:bg-[#151b24] p-3 rounded-xl border border-slate-200 dark:border-[#232d3d] text-xs text-slate-700 dark:text-slate-200 leading-relaxed">
-              <span className="font-bold text-rose-600 dark:text-rose-400 ml-1">راهنمای مسیر داخل راهرو:</span>
-              {nav.indoor_navigation_hint}
-            </div>
-          )}
-        </div>
+            {nav.indoor_navigation_hint && (
+              <div className="bg-white dark:bg-[#151b24] p-3 rounded-xl border border-slate-200 dark:border-[#232d3d] text-xs text-slate-700 dark:text-slate-200 leading-relaxed">
+                <span className="font-bold text-[#d9383a] dark:text-[#e0484a] ml-1">راهنمای مسیر داخل راهرو:</span>
+                {nav.indoor_navigation_hint}
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Mall Directory & Access Details */}
         {mallInfo && (
@@ -134,13 +141,13 @@ export function MallNavigationModal({
         <div className="p-3 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs text-slate-600 dark:text-slate-300 flex items-start gap-2">
           <MapPin className="w-4 h-4 text-slate-400 shrink-0 mt-0.5" />
           <span>
-            {nav.main_street || nav.location_label || 'تهران'}
+            {nav?.main_street || nav?.location_label || mallInfo?.location_label || 'تهران'}
           </span>
         </div>
 
         <button
           onClick={onClose}
-          className="w-full py-2.5 rounded-xl bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-900 dark:text-white font-semibold text-xs transition-colors"
+          className="w-full py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-900 dark:text-white font-semibold text-xs transition-colors cursor-pointer"
         >
           {COPY_FA.mallLocator.closeBtn}
         </button>
