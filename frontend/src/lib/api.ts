@@ -3,9 +3,22 @@ import {
   MallInfo, BazaarHub, InquiryResponse
 } from '@/types/api';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL !== undefined 
-  ? process.env.NEXT_PUBLIC_API_URL 
-  : (typeof window !== 'undefined' ? '' : 'http://localhost:8000');
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || (typeof window !== 'undefined' ? '' : 'https://torob-assistant-api.liara.run');
+
+const STOP_WORDS = new Set([
+  'تا', 'میلیون', 'تومن', 'تومان', 'هزار', 'قیمت', 'بودجه', 'زیر', 'سبک',
+  'دانشجویی', 'قسطی', 'اقساطی', 'در', 'به', 'با', 'از', 'برای', 'ونک',
+  'چارسو', 'علاءالدین', 'تهران', 'پاساژ', 'بازار', 'مغازه', 'فروشگاه',
+  'نزدیک', 'اصل', 'اورجینال', 'دنبال', 'میخوام', 'میخواهم', 'خرید', 'یک', 'یه'
+]);
+
+export function extractCoreKeywords(raw: string): string {
+  const tokens = raw
+    .trim()
+    .split(/\s+/)
+    .filter((w) => !STOP_WORDS.has(w) && !/^\d+$/.test(w) && !/^[۰-۹]+$/.test(w));
+  return tokens.length > 0 ? tokens.slice(0, 3).join(' ') : raw.trim();
+}
 
 export async function searchProducts(
   q: string,
@@ -13,15 +26,47 @@ export async function searchProducts(
   brand?: string,
   limit: number = 20
 ): Promise<{ total: number; items: ProductSummary[] }> {
-  const params = new URLSearchParams({ q, limit: limit.toString() });
-  if (category) params.append('category', category);
-  if (brand) params.append('brand', brand);
+  const executeQuery = async (queryText: string) => {
+    const params = new URLSearchParams({ q: queryText, limit: limit.toString() });
+    if (category) params.append('category', category);
+    if (brand) params.append('brand', brand);
 
-  const res = await fetch(`${API_BASE}/api/v1/products/search?${params.toString()}`);
-  if (!res.ok) {
-    throw new Error('خطا در دریافت نتایج جستجو');
+    const res = await fetch(`${API_BASE}/api/v1/products/search?${params.toString()}`);
+    if (!res.ok) {
+      throw new Error('خطا در دریافت نتایج جستجو');
+    }
+    return res.json();
+  };
+
+  try {
+    // 1. Try raw query
+    const res = await executeQuery(q);
+    if (res.items && res.items.length > 0) {
+      return res;
+    }
+
+    // 2. If 0 results, retry with cleaned core keywords (stripping budget numbers, "تا ۳۰ میلیون", etc.)
+    const cleaned = extractCoreKeywords(q);
+    if (cleaned && cleaned !== q) {
+      const fallbackRes = await executeQuery(cleaned);
+      if (fallbackRes.items && fallbackRes.items.length > 0) {
+        return fallbackRes;
+      }
+    }
+
+    // 3. If still 0, try the first meaningful word
+    const firstWord = q.trim().split(/\s+/)[0];
+    if (firstWord && firstWord !== q && firstWord !== cleaned) {
+      const singleWordRes = await executeQuery(firstWord);
+      if (singleWordRes.items && singleWordRes.items.length > 0) {
+        return singleWordRes;
+      }
+    }
+
+    return res;
+  } catch (err) {
+    throw err;
   }
-  return res.json();
 }
 
 export async function getProduct(productId: string): Promise<ProductDetail> {

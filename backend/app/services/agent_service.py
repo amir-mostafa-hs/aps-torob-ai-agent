@@ -217,6 +217,17 @@ class AgentService:
                 brand=args.get("brand"),
                 limit=4
             )
+            # Resilient fallback: If 0 items, search by first significant word
+            if not items and query:
+                words = [w for w in query.strip().split() if len(w) > 2]
+                first_word = words[0] if words else ""
+                if first_word and first_word != query:
+                    items = self.repo.search_products(
+                        query=first_word,
+                        category=args.get("category"),
+                        brand=args.get("brand"),
+                        limit=4
+                    )
             data = [item.model_dump() for item in items]
             ui_block = {"type": "ProductCardList", "data": {"products": data}} if data else None
             return {"count": len(items), "products": data}, ui_block

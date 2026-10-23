@@ -130,6 +130,7 @@ export default function Home() {
 
     try {
       let receivedAnyStreamEvent = false;
+      let receivedUIBlock = false;
 
       // Try streaming from agent service
       await streamAgentChat(
@@ -170,6 +171,7 @@ export default function Home() {
                   reasoningSteps: currentSteps.map((s) => ({ ...s, status: 'done' }))
                 };
               } else if (event === 'ui_block') {
+                receivedUIBlock = true;
                 const existingBlocks = turn.uiBlocks || [];
                 return {
                   ...turn,
@@ -198,6 +200,33 @@ export default function Home() {
           );
         }
       );
+
+      // GUARANTEE: If the backend did not emit any ui_block, proactively search products and render them!
+      if (!receivedUIBlock) {
+        try {
+          const searchRes = await searchProducts(text, undefined, undefined, 4);
+          if (searchRes.items && searchRes.items.length > 0) {
+            setMessages((prev) =>
+              prev.map((turn) =>
+                turn.id === assistantMsgId
+                  ? {
+                      ...turn,
+                      uiBlocks: [
+                        ...(turn.uiBlocks || []),
+                        {
+                          type: 'ProductCardList',
+                          data: { products: searchRes.items }
+                        }
+                      ]
+                    }
+                  : turn
+              )
+            );
+          }
+        } catch (searchErr) {
+          console.warn('Auto-inject product cards failed:', searchErr);
+        }
+      }
 
       // If finished cleanly, mark isStreaming false
       setMessages((prev) =>
@@ -471,7 +500,7 @@ export default function Home() {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   placeholder="دنبال چه کالایی در تهران هستید؟ (مثلاً: لپ‌تاپ لنوو، کتونی تا ۳ تومن...)"
-                  className="w-full px-3 py-2 text-xs sm:text-sm bg-transparent outline-none text-slate-900 dark:text-[#f0f6fc] placeholder:text-slate-400"
+                  className="w-full px-3 py-2 text-xs sm:text-sm bg-transparent outline-none focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 border-none ring-0 text-slate-900 dark:text-[#f0f6fc] placeholder:text-slate-400"
                   autoFocus
                 />
 
@@ -566,16 +595,9 @@ export default function Home() {
                         />
                       )}
 
-                      {/* Assistant Text Response */}
-                      {turn.text && (
-                        <div className="text-xs sm:text-sm text-slate-800 dark:text-slate-200 leading-relaxed whitespace-pre-wrap px-1">
-                          {turn.text}
-                        </div>
-                      )}
-
-                      {/* Generative UI Blocks in Stream */}
+                      {/* Generative UI Blocks in Stream (Product Cards, Shops, Maps) */}
                       {turn.uiBlocks && turn.uiBlocks.length > 0 && (
-                        <div className="space-y-2 pt-1">
+                        <div className="space-y-2 pt-1 animate-fade-in">
                           {turn.uiBlocks.map((block, bIdx) => (
                             <GenerativeUIRenderer
                               key={bIdx}
@@ -587,6 +609,13 @@ export default function Home() {
                               onOpenMallGuide={(mallName) => setMallNameForModal(mallName)}
                             />
                           ))}
+                        </div>
+                      )}
+
+                      {/* Assistant Text Response */}
+                      {turn.text && (
+                        <div className="text-xs sm:text-sm text-slate-800 dark:text-slate-200 leading-relaxed whitespace-pre-wrap px-1">
+                          {turn.text}
                         </div>
                       )}
 
@@ -633,7 +662,7 @@ export default function Home() {
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="سؤال یا خواسته بعدی خود را بنویسید..."
                 disabled={isStreaming}
-                className="flex-1 px-3 py-2 text-xs sm:text-sm bg-transparent outline-none text-slate-900 dark:text-[#f0f6fc] placeholder:text-slate-400"
+                className="flex-1 px-3 py-2 text-xs sm:text-sm bg-transparent outline-none focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 border-none ring-0 text-slate-900 dark:text-[#f0f6fc] placeholder:text-slate-400"
               />
 
               <button

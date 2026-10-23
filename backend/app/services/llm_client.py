@@ -98,8 +98,10 @@ class LLMClient:
             }
 
         # Intent detection based on user query
-        if any(w in user_msg for w in ["کتونی", "کفش", "سامسونگ", "گوشی", "لپ‌تاپ", "لپتاپ", "دوربین", "سونی", "آیفون"]):
-            # Trigger search_products tool
+        product_keywords = ["کتونی", "کفش", "سامسونگ", "گوشی", "لپ‌تاپ", "لپتاپ", "دوربین", "سونی", "آیفون", "شارژر"]
+        matched_kw = next((w for w in product_keywords if w in user_msg), None)
+        if matched_kw:
+            # Trigger search_products tool with the clean matched product keyword
             return {
                 "role": "assistant",
                 "content": None,
@@ -109,7 +111,7 @@ class LLMClient:
                         "type": "function",
                         "function": {
                             "name": "search_products",
-                            "arguments": json.dumps({"query": user_msg[:30]}, ensure_ascii=False)
+                            "arguments": json.dumps({"query": matched_kw}, ensure_ascii=False)
                         }
                     }
                 ]

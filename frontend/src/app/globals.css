@@ -81,10 +81,24 @@ body {
   scrollbar-width: none;
 }
 
-/* Accessible focus outline */
-*:focus-visible {
+/* Accessible focus outline (excluding input and textarea controls) */
+*:focus-visible:not(input):not(textarea) {
   outline: 2px solid var(--torob-red);
   outline-offset: 2px;
+}
+
+input,
+input:focus,
+input:focus-visible,
+textarea,
+textarea:focus,
+textarea:focus-visible {
+  outline: none !important;
+  outline-width: 0 !important;
+  outline-style: none !important;
+  box-shadow: none !important;
+  border-color: transparent !important;
+  -webkit-appearance: none;
 }
 
 /* Restrained, hardware-accelerated animation keyframes */
