@@ -334,7 +334,7 @@ export function GenerativeUIRenderer({
   // 5. BAZAAR HUB CARD
   if (type === 'BazaarHubCard') {
     return (
-      <div className="my-3 p-4 rounded-2xl bg-amber-50/60 dark:bg-amber-950/20 border border-amber-200/80 dark:border-amber-900/40 space-y-2.5 animate-enter shadow-xs">
+      <div className="my-3 p-4 rounded-2xl bg-amber-50/60 dark:bg-amber-950/20 border border-amber-200/80 dark:border-amber-900/40 space-y-3 animate-enter shadow-xs">
         <div className="flex items-center gap-2 text-amber-800 dark:text-amber-300 font-bold text-xs">
           <Building2 className="w-4 h-4 text-amber-600 shrink-0" />
           <span>پیشنهاد مراجعه به بورس تخصصی کالا در تهران</span>
@@ -345,6 +345,19 @@ export function GenerativeUIRenderer({
         {(data.top_neighborhoods || data.top_malls) && (
           <div className="text-[11px] font-semibold text-amber-900 dark:text-amber-200">
             قطب‌های اصلی: {data.top_neighborhoods || data.top_malls}
+          </div>
+        )}
+        {typeof data.center_lat === 'number' && typeof data.center_lon === 'number' && (
+          <div className="pt-2">
+            <InteractiveMapCard
+              lat={data.center_lat}
+              lon={data.center_lon}
+              title={`بورس ${data.category_name || 'کالا'} تهران`}
+              subtitle={data.top_malls || data.top_neighborhoods}
+              address={data.top_streets || data.top_neighborhoods || 'تهران'}
+              userLat={userLat}
+              userLon={userLon}
+            />
           </div>
         )}
       </div>

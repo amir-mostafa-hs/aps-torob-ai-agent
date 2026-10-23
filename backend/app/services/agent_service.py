@@ -243,13 +243,30 @@ class AgentService:
                 open_now_only=args.get("open_now", False),
                 sort_by="balanced"
             )
-            data = [offer.model_dump() for offer in offers[:4]]
-            ui_block = {"type": "ShopCardList", "data": {"offers": data}} if data else None
-            return {"total_offers": len(offers), "offers": data}, ui_block
+            if offers:
+                data = [offer.model_dump() for offer in offers[:4]]
+                ui_block = {"type": "ShopCardList", "data": {"offers": data}}
+                return {"total_offers": len(offers), "offers": data}, ui_block
+            else:
+                # Fallback to category bazaar hub recommendation if no individual shop in stock
+                cat_name = ""
+                if pid:
+                    p_info = self.repo.get_product_detail(pid)
+                    if p_info:
+                        cat_name = p_info.category_name
+                if not cat_name:
+                    cat_name = "لپ تاپ و نوت بوک"
+                bazaar = self.repo.get_bazaar_recommendation(cat_name)
+                if bazaar:
+                    b_data = bazaar.model_dump()
+                    return {"total_offers": 0, "bazaar_hub": b_data}, {"type": "BazaarHubCard", "data": b_data}
+                return {"total_offers": 0, "offers": []}, None
 
         elif name == "get_mall_navigation":
-            mall_name = args.get("mall_name", "")
+            mall_name = args.get("mall_name") or "پاساژ علاءالدین"
             mall = self.repo.get_mall_info(mall_name)
+            if not mall:
+                mall = self.repo.get_mall_info("پاساژ علاءالدین")
             if mall:
                 m_data = mall.model_dump()
                 return m_data, {"type": "MallNavigationCard", "data": m_data}
