@@ -87,6 +87,11 @@ class DataRepository:
         try:
             cur.execute(sql, params)
             rows = cur.fetchall()
+            if not rows and " AND " in fts_query:
+                fallback_params = list(params)
+                fallback_params[0] = fts_query.replace(" AND ", " OR ")
+                cur.execute(sql, fallback_params)
+                rows = cur.fetchall()
             results = []
             for r in rows:
                 results.append(ProductSummary(

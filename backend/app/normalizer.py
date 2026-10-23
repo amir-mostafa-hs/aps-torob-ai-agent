@@ -60,7 +60,9 @@ FTS5_RESERVED = {"AND", "OR", "NOT", "NEAR"}
 PERSIAN_STOPWORDS = {
     "یه", "یک", "میخوام", "میخواهم", "می", "خوام", "خواهم", "دنبال", "دارید", "دارین",
     "برای", "رو", "در", "با", "از", "که", "این", "آن", "به", "هم",
-    "تا", "حدود", "لطفا", "لطفاً", "چی", "کجا", "شد", "شود", "کنم", "کنید"
+    "تا", "حدود", "لطفا", "لطفاً", "چی", "کجا", "شد", "شود", "کنم", "کنید",
+    "میلیون", "تومن", "تومان", "هزار", "قیمت", "خرید", "ارزان", "قسطی", "فروشگاه", "مغازه", "نزدیک",
+    "اصل", "حضوری", "تهران", "بازار", "پاساژ", "چارسو", "علاءالدین", "پایتخت", "پالادیوم", "کوروش", "ارگ"
 }
 
 def build_fts5_query(raw_query: str) -> str:
@@ -78,6 +80,11 @@ def build_fts5_query(raw_query: str) -> str:
     
     # Strip conversational stop words if content tokens remain
     content_tokens = [t for t in meaningful_tokens if t not in PERSIAN_STOPWORDS]
+    # If there are word tokens, filter out standalone short digits from price expressions
+    has_words = any(re.search(r"[^\d]", t) for t in content_tokens)
+    if has_words:
+        content_tokens = [t for t in content_tokens if re.search(r"[^\d]", t) or len(t) >= 3]
+
     final_tokens = content_tokens if content_tokens else meaningful_tokens
 
     safe_tokens: List[str] = [f'"{token}"' for token in final_tokens]
