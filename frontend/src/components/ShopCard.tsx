@@ -20,23 +20,24 @@ export function ShopCard({
   onOpenInquiry,
 }: ShopCardProps) {
   const formatPrice = (p: number) => {
+    if (!p) return 'قیمت ثبت‌نشده';
     return `${Math.round(p).toLocaleString('fa-IR')} تومان`;
   };
 
   const formatDistance = (m: number | null) => {
     if (!m) return null;
-    if (m < 1000) return `${Math.round(m)} متر`;
-    return `${(m / 1000).toFixed(1)} کیلومتر`;
+    if (m < 1000) return `${Math.round(m).toLocaleString('fa-IR')} متر`;
+    return `${(m / 1000).toLocaleString('fa-IR', { maximumFractionDigits: 1 })} کیلومتر`;
   };
 
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 border border-slate-200/80 dark:border-slate-800 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+    <div className="bg-white dark:bg-[#151b24] rounded-2xl p-4 border border-slate-200/80 dark:border-[#232d3d] shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
       <div>
         {/* Top Header: Shop name & distance */}
         <div className="flex items-start justify-between gap-3 mb-2.5">
           <div>
             <div className="flex items-center gap-2">
-              <h4 className="font-bold text-sm text-slate-900 dark:text-white">
+              <h4 className="font-bold text-sm text-slate-900 dark:text-[#f0f6fc]">
                 {offer.shop_name}
               </h4>
               {offer.is_real_shop ? (
@@ -51,7 +52,7 @@ export function ShopCard({
             </div>
 
             {/* Mall / Street info */}
-            <div className="flex items-center gap-1.5 text-xs text-slate-500 mt-1">
+            <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 mt-1">
               <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
               <span className="truncate">
                 {offer.navigation.is_inside_mall && offer.navigation.mall_name_clean
@@ -63,7 +64,7 @@ export function ShopCard({
 
           {/* Distance Badge */}
           {offer.distance_meters !== null && (
-            <span className="shrink-0 text-xs font-bold px-2 py-1 rounded-xl bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300">
+            <span className="shrink-0 text-xs font-bold px-2 py-1 rounded-xl bg-slate-100 text-slate-700 dark:bg-[#1a2230] dark:text-slate-300 border border-transparent dark:border-[#2a3547]">
               {formatDistance(offer.distance_meters)}
             </span>
           )}
@@ -94,10 +95,10 @@ export function ShopCard({
         </div>
 
         {/* Price & Freshness Banner */}
-        <div className="bg-slate-50 dark:bg-slate-800/50 p-2.5 rounded-xl border border-slate-100 dark:border-slate-800 mb-3 flex items-center justify-between">
+        <div className="bg-slate-50 dark:bg-[#1a2230]/60 p-2.5 rounded-xl border border-slate-100 dark:border-[#232d3d] mb-3 flex items-center justify-between">
           <div>
             <span className="text-[10px] text-slate-400 block">قیمت ثبت‌شده:</span>
-            <span className="text-sm font-extrabold text-red-600 dark:text-red-400">
+            <span className="text-sm font-extrabold text-rose-600 dark:text-rose-400">
               {formatPrice(offer.price.amount_toman)}
             </span>
           </div>
@@ -123,10 +124,10 @@ export function ShopCard({
       </div>
 
       {/* Buttons */}
-      <div className="pt-2 border-t border-slate-100 dark:border-slate-800 grid grid-cols-2 gap-2">
+      <div className="pt-2 border-t border-slate-100 dark:border-[#232d3d] grid grid-cols-2 gap-2">
         <button
           onClick={() => onOpenInquiry(offer)}
-          className="flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold transition-all shadow-sm active:scale-95"
+          className="flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-rose-600 hover:bg-rose-700 dark:bg-rose-600/85 dark:hover:bg-rose-500 text-white text-xs font-medium transition-all shadow-none active:scale-95"
         >
           <PhoneCall className="w-3.5 h-3.5" />
           <span>استعلام زنده</span>
@@ -135,9 +136,9 @@ export function ShopCard({
         {offer.navigation.is_inside_mall ? (
           <button
             onClick={() => onOpenMallGuide(offer)}
-            className="flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-semibold border border-slate-200 dark:border-slate-700 transition-colors"
+            className="flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200/80 dark:bg-[#1a2230] dark:hover:bg-[#232d3d] text-slate-800 dark:text-slate-200 text-xs font-semibold border border-slate-200/70 dark:border-[#2a3547] transition-colors"
           >
-            <Compass className="w-3.5 h-3.5 text-red-600" />
+            <Compass className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400" />
             <span>راهنمای پاساژ</span>
           </button>
         ) : (

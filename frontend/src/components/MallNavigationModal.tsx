@@ -38,18 +38,18 @@ export function MallNavigationModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-      <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-800 space-y-5 max-h-[90vh] overflow-y-auto">
+      <div className="bg-white dark:bg-[#151b24] rounded-2xl max-lg w-full p-6 shadow-2xl border border-slate-200 dark:border-[#232d3d] space-y-5 max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+        <div className="flex items-center justify-between border-b border-slate-100 dark:border-[#232d3d] pb-3">
           <div className="flex items-center gap-2">
-            <div className="p-2 rounded-xl bg-red-100 text-red-600 dark:bg-red-950/60 dark:text-red-400">
+            <div className="p-2 rounded-xl bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/20">
               <Compass className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-bold text-base text-slate-900 dark:text-white">
+              <h3 className="font-bold text-base text-slate-900 dark:text-[#f0f6fc]">
                 {COPY_FA.mallLocator.title}
               </h3>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 {offer.shop_name} • {nav.mall_name_clean || 'پاساژ'}
               </p>
             </div>
@@ -63,28 +63,28 @@ export function MallNavigationModal({
         </div>
 
         {/* In-Mall Exact Location Card */}
-        <div className="bg-gradient-to-br from-red-50 to-orange-50 dark:from-red-950/30 dark:to-orange-950/20 p-4 rounded-2xl border border-red-200/80 dark:border-red-900/40 space-y-3">
-          <span className="text-xs font-bold text-red-700 dark:text-red-400 block">
+        <div className="bg-rose-50/50 dark:bg-[#1a2230]/60 p-4 rounded-2xl border border-rose-200/60 dark:border-[#2a3547] space-y-3">
+          <span className="text-xs font-bold text-rose-700 dark:text-rose-300 block">
             موقعیت دقیق غرفه در پاساژ:
           </span>
           <div className="grid grid-cols-2 gap-3 text-xs">
-            <div className="bg-white/80 dark:bg-slate-900/80 p-2.5 rounded-xl border border-red-100 dark:border-red-900/30">
+            <div className="bg-white dark:bg-[#151b24] p-2.5 rounded-xl border border-slate-200 dark:border-[#232d3d]">
               <span className="text-slate-400 block text-[10px]">طبقه:</span>
-              <span className="font-bold text-slate-900 dark:text-white text-sm">
+              <span className="font-bold text-slate-900 dark:text-[#f0f6fc] text-sm">
                 {nav.floor_clean || 'همکف'}
               </span>
             </div>
-            <div className="bg-white/80 dark:bg-slate-900/80 p-2.5 rounded-xl border border-red-100 dark:border-red-900/30">
+            <div className="bg-white dark:bg-[#151b24] p-2.5 rounded-xl border border-slate-200 dark:border-[#232d3d]">
               <span className="text-slate-400 block text-[10px]">واحد / پلاک:</span>
-              <span className="font-bold text-slate-900 dark:text-white text-sm">
+              <span className="font-bold text-slate-900 dark:text-[#f0f6fc] text-sm">
                 {nav.unit_clean || 'نامشخص'}
               </span>
             </div>
           </div>
 
           {nav.indoor_navigation_hint && (
-            <div className="bg-white/80 dark:bg-slate-900/80 p-3 rounded-xl border border-red-100 dark:border-red-900/30 text-xs text-slate-700 dark:text-slate-200 leading-relaxed">
-              <span className="font-bold text-red-600 ml-1">راهنمای مسیر داخل راهرو:</span>
+            <div className="bg-white dark:bg-[#151b24] p-3 rounded-xl border border-slate-200 dark:border-[#232d3d] text-xs text-slate-700 dark:text-slate-200 leading-relaxed">
+              <span className="font-bold text-rose-600 dark:text-rose-400 ml-1">راهنمای مسیر داخل راهرو:</span>
               {nav.indoor_navigation_hint}
             </div>
           )}

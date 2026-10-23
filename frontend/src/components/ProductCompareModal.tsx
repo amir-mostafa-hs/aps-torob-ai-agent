@@ -27,17 +27,17 @@ export function ProductCompareModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-      <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-4xl w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-800 space-y-4 max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+      <div className="bg-white dark:bg-[#151b24] rounded-2xl max-w-4xl w-full p-6 shadow-2xl border border-slate-200 dark:border-[#232d3d] space-y-4 max-h-[90vh] overflow-y-auto">
+        <div className="flex items-center justify-between border-b border-slate-100 dark:border-[#232d3d] pb-3">
           <div className="flex items-center gap-2">
-            <div className="p-2 rounded-xl bg-red-100 text-red-600 dark:bg-red-950/60 dark:text-red-400">
+            <div className="p-2 rounded-xl bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/20">
               <Layers className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-bold text-base text-slate-900 dark:text-white">
+              <h3 className="font-bold text-base text-slate-900 dark:text-[#f0f6fc]">
                 {COPY_FA.productCompare.title}
               </h3>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 {COPY_FA.productCompare.subtitle}
               </p>
             </div>
@@ -54,19 +54,19 @@ export function ProductCompareModal({
         <div className="overflow-x-auto">
           <table className="w-full text-xs text-right border-collapse">
             <thead>
-              <tr className="border-b border-slate-200 dark:border-slate-700">
-                <th className="p-3 bg-slate-50 dark:bg-slate-800/50 font-bold text-slate-500 w-36">
+              <tr className="border-b border-slate-200 dark:border-[#232d3d]">
+                <th className="p-3 bg-slate-50 dark:bg-[#1a2230]/50 font-bold text-slate-500 dark:text-slate-400 w-36">
                   معیار مقایسه
                 </th>
                 {products.map((p) => (
-                  <th key={p.product_id} className="p-3 font-bold text-slate-900 dark:text-white min-w-[200px]">
+                  <th key={p.product_id} className="p-3 font-bold text-slate-900 dark:text-[#f0f6fc] min-w-[200px]">
                     <div className="line-clamp-2 mb-2">{p.persian_title_clean}</div>
                     <button
                       onClick={() => {
                         onSelectProductForStores(p);
                         onClose();
                       }}
-                      className="w-full py-1.5 px-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-bold text-[11px] transition-all flex items-center justify-center gap-1 shadow-sm"
+                      className="w-full py-1.5 px-2 rounded-lg bg-rose-600 hover:bg-rose-700 dark:bg-rose-600/85 dark:hover:bg-rose-500 text-white font-bold text-[11px] transition-all flex items-center justify-center gap-1 shadow-none"
                     >
                       <Store className="w-3.5 h-3.5" />
                       <span>دیدن فروشگاه‌ها</span>
@@ -75,13 +75,13 @@ export function ProductCompareModal({
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+            <tbody className="divide-y divide-slate-100 dark:divide-[#232d3d]">
               <tr>
-                <td className="p-3 bg-slate-50/60 dark:bg-slate-800/30 font-semibold text-slate-600 dark:text-slate-400">
+                <td className="p-3 bg-slate-50/60 dark:bg-[#1a2230]/30 font-semibold text-slate-600 dark:text-slate-400">
                   {COPY_FA.productCompare.rows.priceRange}
                 </td>
                 {products.map((p) => (
-                  <td key={p.product_id} className="p-3 font-extrabold text-red-600 text-sm">
+                  <td key={p.product_id} className="p-3 font-extrabold text-rose-600 dark:text-rose-400 text-sm">
                     {formatPrice(p.min_price_toman)}
                   </td>
                 ))}

@@ -1,5 +1,8 @@
 import os
+import json
 from pathlib import Path
+from typing import Union, List, Any
+from pydantic import field_validator
 from pydantic_settings import BaseSettings
 
 # Resolve base directories
@@ -33,6 +36,22 @@ class Settings(BaseSettings):
     # Server configuration
     HOST: str = "0.0.0.0"
     PORT: int = int(os.getenv("PORT", 8000))
-    CORS_ORIGINS: list[str] = ["*"]
+    CORS_ORIGINS: Any = ["*"]
+
+    @field_validator("CORS_ORIGINS", mode="before")
+    @classmethod
+    def assemble_cors_origins(cls, v: Any) -> List[str]:
+        if isinstance(v, str):
+            if v.strip() in ("*", '["*"]', "['*']"):
+                return ["*"]
+            if v.startswith("[") and v.endswith("]"):
+                try:
+                    return json.loads(v)
+                except Exception:
+                    pass
+            return [i.strip() for i in v.split(",") if i.strip()]
+        elif isinstance(v, list):
+            return v
+        return ["*"]
 
 settings = Settings()

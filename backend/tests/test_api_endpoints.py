@@ -66,3 +66,10 @@ def test_inquiry_simulation_api(client):
     assert data["offer_id"] == offer_id
     assert "شبیه‌سازی" in data["simulation_disclaimer"]
     assert data["confirmed_price_toman"] > 0
+
+def test_cors_origins_validator():
+    from app.config import Settings
+    assert Settings.assemble_cors_origins("*") == ["*"]
+    assert Settings.assemble_cors_origins('["http://localhost:3000", "https://torob.ir"]') == ["http://localhost:3000", "https://torob.ir"]
+    assert Settings.assemble_cors_origins("http://localhost:3000, https://torob.ir") == ["http://localhost:3000", "https://torob.ir"]
+    assert Settings.assemble_cors_origins(["*"]) == ["*"]

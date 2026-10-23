@@ -1,13 +1,15 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *, .dark, .dark *));
+
 :root {
   --background: #f8fafc;
   --foreground: #0f172a;
-  --torob-red: #d32f2f;
-  --torob-red-hover: #b71c1c;
-  --torob-red-light: #fee2e2;
   --card-bg: #ffffff;
   --card-border: #e2e8f0;
+  --torob-red: #d9383a;
+  --torob-red-hover: #c42b2d;
+  --torob-red-light: #fef2f2;
   --muted: #64748b;
   --accent-green: #10b981;
   --accent-amber: #f59e0b;
@@ -15,13 +17,26 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #090d16;
-    --foreground: #f1f5f9;
-    --card-bg: #111827;
-    --card-border: #1f2937;
-    --torob-red-light: #450a0a;
-    --muted: #94a3b8;
+    --background: #0c1017;
+    --foreground: #f0f6fc;
+    --card-bg: #151b24;
+    --card-border: #232d3d;
+    --torob-red: #e05a5a;
+    --torob-red-hover: #ea6b6b;
+    --torob-red-light: #221417;
+    --muted: #8b949e;
   }
+}
+
+.dark {
+  --background: #0c1017;
+  --foreground: #f0f6fc;
+  --card-bg: #151b24;
+  --card-border: #232d3d;
+  --torob-red: #e05a5a;
+  --torob-red-hover: #ea6b6b;
+  --torob-red-light: #221417;
+  --muted: #8b949e;
 }
 
 html {
@@ -42,6 +57,115 @@ body {
   outline-offset: 2px;
 }
 
+/* Restrained, hardware-accelerated animation keyframes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes enterSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideLeft {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes skeletonPulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Animation utility classes (150-200ms desktop, 180-225ms mobile) */
+.animate-fade-in {
+  animation: fadeIn 160ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-enter {
+  animation: enterSlideUp 180ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-slide-up {
+  animation: enterSlideUp 200ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-slide-left {
+  animation: slideLeft 200ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-slide-down {
+  animation: slideDown 180ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(226, 232, 240, 0.4) 0%,
+    rgba(241, 245, 249, 0.8) 50%,
+    rgba(226, 232, 240, 0.4) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s infinite ease-in-out;
+}
+
+.dark .animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(30, 41, 59, 0.4) 0%,
+    rgba(51, 65, 85, 0.7) 50%,
+    rgba(30, 41, 59, 0.4) 100%
+  );
+  background-size: 200% 100%;
+}
+
+/* Stagger utilities for smooth waterfall entrance without layout shift */
+.stagger-1 { animation-delay: 35ms; }
+.stagger-2 { animation-delay: 70ms; }
+.stagger-3 { animation-delay: 105ms; }
+.stagger-4 { animation-delay: 140ms; }
+
 /* Reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
   *, ::before, ::after {
@@ -49,5 +173,7 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+    transform: none !important;
   }
 }
+
