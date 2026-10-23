@@ -3,7 +3,7 @@ import {
   MallInfo, BazaarHub, InquiryResponse
 } from '@/types/api';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || (typeof window !== 'undefined' ? '' : 'https://torob-assistant-api.liara.run');
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://torob-assistant-api.liara.run';
 
 const STOP_WORDS = new Set([
   'تا', 'میلیون', 'تومن', 'تومان', 'هزار', 'قیمت', 'بودجه', 'زیر', 'سبک',

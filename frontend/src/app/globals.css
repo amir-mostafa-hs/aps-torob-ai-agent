@@ -81,24 +81,27 @@ body {
   scrollbar-width: none;
 }
 
-/* Accessible focus outline (excluding input and textarea controls) */
-*:focus-visible:not(input):not(textarea) {
+/* Accessible focus outline */
+*:focus-visible {
   outline: 2px solid var(--torob-red);
   outline-offset: 2px;
 }
 
 input,
+textarea,
+select {
+  outline: none !important;
+}
+
 input:focus,
 input:focus-visible,
-textarea,
 textarea:focus,
-textarea:focus-visible {
+textarea:focus-visible,
+select:focus,
+select:focus-visible {
   outline: none !important;
-  outline-width: 0 !important;
-  outline-style: none !important;
+  outline-offset: 0 !important;
   box-shadow: none !important;
-  border-color: transparent !important;
-  -webkit-appearance: none;
 }
 
 /* Restrained, hardware-accelerated animation keyframes */

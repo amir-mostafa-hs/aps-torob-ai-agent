@@ -97,8 +97,7 @@ class LLMClient:
                 "content": "با بررسی اطلاعات کاتالوگ و فروشگاه‌های ترب، گزینه‌های بالا مطابق با خواسته شما پیشنهاد شدند. می‌توانید با استفاده از کارت‌ها، جزئیات هر فروشگاه یا راهنمای داخل پاساژ را مشاهده کنید."
             }
 
-        # Intent detection based on user query
-        product_keywords = ["کتونی", "کفش", "سامسونگ", "گوشی", "لپ‌تاپ", "لپتاپ", "دوربین", "سونی", "آیفون", "شارژر"]
+        product_keywords = ["کتونی", "کفش", "سامسونگ", "گوشی", "لپ‌تاپ", "لپتاپ", "دوربین", "سونی", "آیفون", "شارژر", "تبلت", "ساعت", "هندزفری", "ایرپاد"]
         matched_kw = next((w for w in product_keywords if w in user_msg), None)
         if matched_kw:
             # Trigger search_products tool with the clean matched product keyword

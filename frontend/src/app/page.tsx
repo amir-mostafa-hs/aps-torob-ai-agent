@@ -201,7 +201,8 @@ export default function Home() {
         }
       );
 
-      // GUARANTEE: If the backend did not emit any ui_block, proactively search products and render them!
+      // GUARANTEE: If the backend did not emit any ui_block (e.g. LLM didn't call tool or FTS matched 0),
+      // proactively search products with cleaned keywords and inject ProductCardList!
       if (!receivedUIBlock) {
         try {
           const searchRes = await searchProducts(text, undefined, undefined, 4);
@@ -595,9 +596,16 @@ export default function Home() {
                         />
                       )}
 
-                      {/* Generative UI Blocks in Stream (Product Cards, Shops, Maps) */}
+                      {/* Assistant Text Response */}
+                      {turn.text && (
+                        <div className="text-xs sm:text-sm text-slate-800 dark:text-slate-200 leading-relaxed whitespace-pre-wrap px-1">
+                          {turn.text}
+                        </div>
+                      )}
+
+                      {/* Generative UI Blocks in Stream */}
                       {turn.uiBlocks && turn.uiBlocks.length > 0 && (
-                        <div className="space-y-2 pt-1 animate-fade-in">
+                        <div className="space-y-2 pt-1">
                           {turn.uiBlocks.map((block, bIdx) => (
                             <GenerativeUIRenderer
                               key={bIdx}
@@ -609,13 +617,6 @@ export default function Home() {
                               onOpenMallGuide={(mallName) => setMallNameForModal(mallName)}
                             />
                           ))}
-                        </div>
-                      )}
-
-                      {/* Assistant Text Response */}
-                      {turn.text && (
-                        <div className="text-xs sm:text-sm text-slate-800 dark:text-slate-200 leading-relaxed whitespace-pre-wrap px-1">
-                          {turn.text}
                         </div>
                       )}
 

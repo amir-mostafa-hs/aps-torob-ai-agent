@@ -217,7 +217,7 @@ class AgentService:
                 brand=args.get("brand"),
                 limit=4
             )
-            # Resilient fallback: If 0 items, search by first significant word
+            # Resilient fallback: If 0 items returned from full phrase, retry with the first content word
             if not items and query:
                 words = [w for w in query.strip().split() if len(w) > 2]
                 first_word = words[0] if words else ""
